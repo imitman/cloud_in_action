@@ -1,0 +1,8 @@
+version: '3.3'
+
+services:
+  cloud_in_action:
+    container_name: cloud_in_action
+    image: workflow0322/cloud_in_action
+    ports:
+      - "80:8080"
