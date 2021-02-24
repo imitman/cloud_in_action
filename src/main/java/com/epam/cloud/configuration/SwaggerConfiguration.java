@@ -1,4 +1,4 @@
-package com.epam.task1.configuration;
+package com.epam.cloud.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +10,23 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class SwaggerConfiguration {
+
     @Bean
-    public Docket apiDocket() {
+    public Docket actuatorApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Actuator")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.epam.task1.controller"))
+                .apis(RequestHandlerSelectors.basePackage("org.springframework.boot.actuate"))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
+    @Bean
+    public Docket cloudApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Cloud")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.epam.cloud.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

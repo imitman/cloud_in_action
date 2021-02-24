@@ -1,4 +1,4 @@
-package com.epam.task1.controller;
+package com.epam.cloud.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiParam;
 @Controller
 public class CloudInActionController {
 
-    @ApiOperation(value = "Gets welcome page", tags = "welcomePage")
+    @ApiOperation(value = "Gets welcome page")
     @GetMapping("/welcome")
     public String homePage(
             @ApiParam(value = "User name, optional")
