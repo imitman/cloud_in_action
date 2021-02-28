@@ -32,6 +32,6 @@ class CloudInActionAppTest {
         mockMvc.perform(get("/welcome").param("name", "Max"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Welcome to Cloud in Action, Maxxxxx")));
+                .andExpect(content().string(containsString("Welcome to Cloud in Action, Max")));
     }
 }
