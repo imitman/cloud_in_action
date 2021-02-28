@@ -24,6 +24,6 @@ public class CloudInActionController {
             @RequestParam(required = false, defaultValue = "Guest") String name, Model model) {
         model.addAttribute("name", name);
         model.addAttribute("propertyValue", propertyValue);
-        return "welcome";
+        return "CI/CD won't be triggered";
     }
 }
