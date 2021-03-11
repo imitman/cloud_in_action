@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.4.2'
+    id 'org.springframework.boot' version '2.4.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
@@ -12,11 +12,14 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:2.4.3'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.4.3'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.4.3'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.4.3'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'mysql:mysql-connector-java:8.0.23'
+    testImplementation('org.springframework.boot:spring-boot-starter-test:2.4.3')
+    testImplementation('org.hsqldb:hsqldb:2.5.1')
 }
 
 test {

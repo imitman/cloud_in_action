@@ -1,4 +1,4 @@
-package com.epam.cloud;
+package com.epam.cloud.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.epam.cloud.controller.CloudInActionController;
-
 @WebMvcTest(CloudInActionController.class)
-class CloudInActionAppTest {
+public class CloudInActionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

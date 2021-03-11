@@ -2,9 +2,6 @@ pipeline {
     agent any
 	environment {
 	    GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
-        IMAGE_NAME = 'workflow0322/cloud_in_action'
-        CONTAINER_NAME = 'cloud_in_action'
-        HEALTH_CHECK_URL = 'http://ec2-34-248-105-8.eu-west-1.compute.amazonaws.com/actuator/health'
     }
     stages {
         stage('Build') {
@@ -37,26 +34,32 @@ pipeline {
                 DOCKER_HUB_LOGIN = credentials('docker-hub')
             }
             steps {
-                sh 'docker build -t $IMAGE_NAME:$GIT_COMMIT_HASH .'
+                sh 'docker build -t ${IMAGE_NAME}:$GIT_COMMIT_HASH .'
                 sh 'docker login --username=$DOCKER_HUB_LOGIN_USR --password=$DOCKER_HUB_LOGIN_PSW'
-                sh 'docker push $IMAGE_NAME:$GIT_COMMIT_HASH'
+                sh 'docker push ${IMAGE_NAME}:$GIT_COMMIT_HASH'
+                sh 'docker rmi ${IMAGE_NAME}:$GIT_COMMIT_HASH'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker rm -f $CONTAINER_NAME || true'
-                sh 'docker run -d --name $CONTAINER_NAME -p 80:8080 $IMAGE_NAME:$GIT_COMMIT_HASH'
+                sshagent(credentials : ['cloud-ssh-key']) {
+                    sh 'ssh -oStrictHostKeyChecking=accept-new ${RUNNING_HOST}'
+                    sh 'docker rm -f ${CONTAINER_NAME} || true'
+                    sh 'docker rmi $(docker images ${IMAGE_NAME} -q)'
+                    sh 'docker run -d --name ${CONTAINER_NAME} -p 80:8080 -e DB_URL -e DB_USERNAME -e DB_PASSWORD ${IMAGE_NAME}:$GIT_COMMIT_HASH'
+                    sh 'exit'
+                }
             }
         }
         stage('Health check') {
             steps {
                 timestamps {
                     script {
-                        echo "Checking and waiting 30 seconds for $HEALTH_CHECK_URL env to be available"
+                        echo 'Checking and waiting 30 seconds for ${HEALTH_CHECK_URL} env to be available'
                         timeout(time: 30, unit: 'SECONDS') {
                             HTTP_RESPONSE = ''
                             while(!HTTP_RESPONSE == '200' ) {
-                                HTTP_RESPONSE = sh (returnStdout: true, script: "curl -s -o /dev/null -w %{http_code} $HEALTH_CHECK_URL")
+                                HTTP_RESPONSE = sh (returnStdout: true, script: 'curl -s -o /dev/null -w %{http_code} ${HEALTH_CHECK_URL}')
                                 sleep(time: 3, unit: 'SECONDS')
                             }
                         }
